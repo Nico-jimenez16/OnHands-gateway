@@ -1,0 +1,26 @@
+# Archivos y directorios de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Archivos de entorno y configuración
+.env
+.flaskenv
+.vscode/
+.idea/
+
+# Directorios de registro y base de datos
+/logs/
+*.log
+*.sqlite3
+
+# Archivos de empaquetado y distribución
+dist/
+build/
+*.whl
+*.egg
