@@ -4,29 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Comandos de desarrollo
 
-El servidor se ejecuta como package Python (usa imports relativos), por lo que **debe** lanzarse desde el directorio padre `OnHands-Project/`, no desde dentro de `api_gateway/`:
+El servicio usa imports absolutos (`from core...`, `from services...`), así que se lanza desde la raíz de este repo:
 
 ```powershell
-# Desde OnHands-Project/ (un nivel arriba de este directorio)
+# Desde la raíz del repo (este directorio)
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r api_gateway/requirements.txt
-uvicorn api_gateway.main:app --reload
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
 El servidor escucha por defecto en `http://127.0.0.1:8000`. Docs interactivas en `/docs` (Swagger) y `/redoc`.
 
-Nota: `run.py` referencia un módulo inexistente (`src.gateway.app:app`) y no funciona — usar siempre `uvicorn api_gateway.main:app` o el `CMD` del `Dockerfile`. No hay suite de tests ni linter configurados en el repo.
+Nota: `run.py` también funciona (es equivalente a `uvicorn main:app` y lee host/puerto desde `settings`); alternativamente se puede usar el `CMD` del `Dockerfile`. No hay suite de tests ni linter configurados en el repo.
 
 ### Docker
 
-Build y ejecución de los tres servicios en una red compartida (ver `../Commands.md` para el flujo completo del monorepo):
+Build y ejecución del gateway en la red compartida (el `Dockerfile` copia el código a la raíz de `/app` y arranca `uvicorn main:app`):
 
 ```powershell
 docker network create on_demand_net
-docker build -t onhands-api-gateway ./api_gateway
+docker build -t onhands-api-gateway .
 docker run -d --name api-gateway --network on_demand_net -p 8000:8000 `
-  --env-file ./api_gateway/.env `
+  --env-file ./.env `
   -e REQUEST_SERVICE_URL=http://ticket-service:8003 `
   onhands-api-gateway
 ```
@@ -35,7 +35,7 @@ Cuando los servicios corren dentro de la red Docker, los hosts deben ser los nom
 
 ## Variables de entorno
 
-`core/settings.py` usa `pydantic-settings` con `extra="ignore"` no configurado, así que **todas** las variables son obligatorias y la app fallará en el arranque si falta alguna. Se cargan desde `api_gateway/.env`:
+`core/settings.py` usa `pydantic-settings` con `extra="ignore"` no configurado, así que **todas** las variables son obligatorias y la app fallará en el arranque si falta alguna. Se cargan desde `.env` en la raíz del repo:
 
 - App: `app_name`, `app_description`, `app_version`, `app_env`, `app_host`, `app_port`
 - Microservicios: `AUTH_SERVICE_URL`, `USERS_SERVICE_URL`, `REQUEST_SERVICE_URL`, `CORE_SERVICE_URL`

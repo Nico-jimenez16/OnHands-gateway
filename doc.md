@@ -8,13 +8,13 @@
 - **Auth**: `pyjwt` para validar tokens HS256
 - **Runtime**: Python 3.11 (imagen base `python:3.11-slim` en `Dockerfile`)
 - **Puerto**: `8000` (configurable vía `app_port`; el `Dockerfile` lo fija en `0.0.0.0:8000`)
-- **Entrypoint**: `uvicorn api_gateway.main:app` — debe ejecutarse desde el directorio padre porque el módulo usa imports relativos. `run.py` apunta a `src.gateway.app:app` (inexistente) y **no funciona**.
+- **Entrypoint**: `uvicorn main:app` — se ejecuta desde la raíz del repo (el código usa imports absolutos). `run.py` también funciona (equivale a `uvicorn main:app`, leyendo host/puerto desde `settings`).
 
 No hay tests, linter, formateador ni `docker-compose.yml` en el repo. La orquestación se hace con comandos `docker run` manuales (ver `../Commands.md`).
 
 ## Variables de entorno requeridas
 
-Cargadas desde `api_gateway/.env` por `core/settings.py`. **Todas obligatorias**: la app no arranca si falta alguna (Pydantic Settings no tiene defaults definidos).
+Cargadas desde `.env` (en la raíz del repo) por `core/settings.py`. **Todas obligatorias**: la app no arranca si falta alguna (Pydantic Settings no tiene defaults definidos).
 
 | Variable | Descripción | Valor por defecto en `.env` |
 |---|---|---|
@@ -256,7 +256,7 @@ No se puede cambiar sin editar código. Cualquier frontend en otro origen (previ
 1. **`AuthMiddleware` no protege ninguna ruta** (`middleware/authentication.py:11-13`).
    `public_paths = ["/auth", "/"]` combinado con `startswith()` significa que cualquier path empieza con `"/"`, así que **todas las peticiones se consideran públicas**. El middleware existe pero no aplica. Fix: comparar igualdad para `"/"` o usar lista explícita de prefijos públicos sin el slash solo.
 
-2. **`run.py` está roto** — referencia `src.gateway.app:app` que no existe. Usar `uvicorn api_gateway.main:app` directamente o el `CMD` del `Dockerfile`.
+2. **`run.py`** — ya corregido: apunta a `main:app` y funciona como equivalente de `uvicorn main:app` (lee host/puerto desde `settings`). También se puede usar `uvicorn main:app` o el `CMD` del `Dockerfile`.
 
 3. **`/auth/login` no está montado** pero el código existe. Si el frontend asume que puede loguearse contra el gateway, recibe 404. Mismo caso para todo `/users`.
 

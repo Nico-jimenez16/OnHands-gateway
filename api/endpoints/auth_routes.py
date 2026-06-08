@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 from typing import Dict, Any
-from ...services.auth_service import AuthService
-from ...core.settings import settings
+from services.auth_service import AuthService
+from core.settings import settings
 
 router = APIRouter()
 

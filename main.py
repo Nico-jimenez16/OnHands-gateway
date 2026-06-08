@@ -1,13 +1,13 @@
 from fastapi import FastAPI
-from .core.settings import settings
+from core.settings import settings
 
 #! Middlewares - Imports
-from .middleware.authentication import AuthMiddleware
-from .middleware.cors import setup_cors_middleware
-from .middleware.logging import LoggingMiddleware
+from middleware.authentication import AuthMiddleware
+from middleware.cors import setup_cors_middleware
+from middleware.logging import LoggingMiddleware
 
 #! Rutas - Imports
-from .api.endpoints import auth_routes, user_routes, service_request_routes, chat_routes, match_routes
+from api.endpoints import auth_routes, user_routes, service_request_routes, chat_routes, match_routes
 
 app = FastAPI(
     title=settings.app_name, 

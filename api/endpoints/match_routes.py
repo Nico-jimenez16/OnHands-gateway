@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import httpx
 
-from ...core.settings import settings
+from core.settings import settings
 
 router = APIRouter()
 

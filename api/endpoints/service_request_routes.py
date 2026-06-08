@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 from typing import Dict, Any, Optional
-from ...services.service_request_service import ServiceRequest
-from ...core.settings import settings
+from services.service_request_service import ServiceRequest
+from core.settings import settings
 import httpx
 
 router = APIRouter()

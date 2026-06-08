@@ -3,7 +3,7 @@ from fastapi.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 import jwt
 from jwt import PyJWTError
-from ..core.settings import settings
+from core.settings import settings
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):

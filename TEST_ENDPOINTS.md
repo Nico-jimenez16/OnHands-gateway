@@ -101,7 +101,7 @@ Desde Swagger UI puedes probar todos los endpoints directamente desde el navegad
 
 3. **Iniciar el API Gateway:**
    ```bash
-   uvicorn api_gateway.main:app --reload
+   uvicorn main:app --reload
    ```
 
 ---
